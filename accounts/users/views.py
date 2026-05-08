@@ -4,7 +4,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login,authenticate,logout
 from django.contrib import messages
 
-# Create your views here.
+def landing_page(request):
+    return render(request,'landing_page.html')
+
+
 def home(request):
     return render(request,'home.html')
 
@@ -12,21 +15,28 @@ def home(request):
 def register_view(request):
     if request.method == 'POST':
         username = request.POST['username']
+        email=request.POST['email']
         password = request.POST['password']
         confirm_password = request.POST['confirm_password']
 
         if password == confirm_password:
-            try:
-                user = User.objects.create_user(username=username,password=password)
-                user.save()
-                login(request,user)
-                return redirect('home')
-            except:
-                messages.error(request,'Username is already exists')
+            if User.objects.filter(email=email).exists():
+                messages.error(request,'Email already exists')
+
+            else:
+                try:
+                    user = User.objects.create_user(username=username,email=email,password=password)
+                    user.save()
+                    login(request,user)
+                    return redirect('home')
+                except:
+                    messages.error(request,'Username is already exists')
+
         else:
             messages.error(request,"Passwords doesn't match")        
 
-    return render(request,'registration/register.html')   
+    return render(request,'registration/register.html')  
+ 
 
 def Login_view(request):
     if request.method == 'POST':
@@ -41,6 +51,7 @@ def Login_view(request):
             messages.error(request,"invalid username or password")
     
     return render(request,'registration/login.html')
+
 
 def Logout_view(request):
     logout(request)

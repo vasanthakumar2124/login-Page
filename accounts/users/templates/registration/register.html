@@ -16,6 +16,7 @@
     <form class ="form-group" method="POST">
         {% csrf_token %}
         <input class="form-control" type="text" name="username" required placeholder="Username"/><br>
+        <input class="form-control" type="email" name="email" required placeholder="email"/><br>
         <input class="form-control" type="password" name="password" required placeholder="password"/><br>
         <input class="form-control" type="password" name="confirm_password" required placeholder="confirm_password"/><br>
         
